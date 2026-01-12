@@ -40,9 +40,22 @@ export async function syncEtfs() {
   await bulkInsert({
     table: etfsTable,
     rows: validEtfs,
+    dedupeOptions: {
+      keyOf: (r) => `${r.symbol}||${r.exchange ?? ''}||${r.currency ?? ''}`,
+    },
     onConflictDoUpdate: {
       target: [etfsTable.symbol, etfsTable.exchange, etfsTable.currency],
-      set: {},
+      set: {
+        name: sql.raw(`excluded."name"`),
+        micCode: sql.raw(`excluded."mic_code"`),
+        country: sql.raw(`excluded."country"`),
+        figiCode: sql.raw(`excluded."figi_code"`),
+        cfiCode: sql.raw(`excluded."cfi_code"`),
+        isin: sql.raw(`excluded."isin"`),
+        cusip: sql.raw(`excluded."cusip"`),
+
+        updatedAt: sql`now()`,
+      },
     },
   });
 }

@@ -2,7 +2,7 @@ import { syncEtfs } from '@/src/jobs/syncEtfs';
 import { mapError } from '@/src/lib/api';
 import { NextResponse } from 'next/server';
 
-export async function POST(_: Request) {
+export async function GET(_: Request) {
   try {
     await syncEtfs();
 
