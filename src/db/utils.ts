@@ -17,28 +17,12 @@ function chunk<T>(arr: T[], size: number): T[][] {
 export type DedupeStrategy = 'first' | 'last';
 
 export type DedupeOptions<T> = {
-  /** Construit la clé de déduplication (doit être stable/déterministe). */
   keyOf: (row: T) => string;
-
-  /** Normalise une row avant insertion dans la map (ex: trim, upper, coercions). */
   normalize?: (row: T) => T;
-
-  /**
-   * Si défini, permet de fusionner deux rows avec la même clé.
-   * - current: la row déjà retenue
-   * - incoming: la nouvelle row
-   * Retourne la row finale.
-   */
   merge?: (current: T, incoming: T) => T;
-
-  /** Choix quand il y a collision et pas de merge: 'last' (défaut) ou 'first'. */
   strategy?: DedupeStrategy;
 };
 
-/**
- * Déduplique un tableau selon une clé.
- * Par défaut: la dernière occurrence gagne.
- */
 export function dedupeByKey<T>(rows: readonly T[], opts: DedupeOptions<T>): T[] {
   const { keyOf, normalize, merge, strategy = 'last' } = opts;
 
