@@ -6,7 +6,10 @@ export async function GET(_: Request) {
   try {
     await syncEtfs();
 
-    return NextResponse.json(null, { status: 200 });
+    return NextResponse.json(
+      { status: 'ok', message: 'etfs table successfully updated' },
+      { status: 200 }
+    );
   } catch (err) {
     console.error('[cron/etfs/sync] failed:', err);
 
