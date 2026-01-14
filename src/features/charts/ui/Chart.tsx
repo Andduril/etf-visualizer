@@ -50,8 +50,11 @@ const Chart = ({
       bottomColor: areaBottomColor,
     });
     newSeries.setData(data);
+    chart.timeScale().fitContent();
 
-    const handleResize = () => {};
+    const handleResize = () => {
+      chart.applyOptions({ width: chartContainerRef.current!.clientWidth });
+    };
 
     window.addEventListener('resize', handleResize);
 

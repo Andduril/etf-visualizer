@@ -1,4 +1,4 @@
-import { twelveDataFetch } from '../client';
+import { twelveDataFetch } from '../http/client';
 import { TwelvedataEtfDto } from './dto';
 
 export async function getAllEtfs(): Promise<TwelvedataEtfDto[]> {

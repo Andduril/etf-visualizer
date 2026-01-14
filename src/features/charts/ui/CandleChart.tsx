@@ -1,3 +1,5 @@
+'use client';
+
 import {
   CandlestickData,
   CandlestickSeries,
@@ -27,7 +29,11 @@ const CandleChart = ({ data, chartOptions, candleOptions, ...props }: CandleChar
     const series = chart.addSeries(CandlestickSeries, candleOptions);
     series.setData(data);
 
-    const handleResize = () => {};
+    chart.timeScale().fitContent();
+
+    const handleResize = () => {
+      chart.applyOptions({ width: chartContainerRef.current!.clientWidth });
+    };
 
     window.addEventListener('resize', handleResize);
 
