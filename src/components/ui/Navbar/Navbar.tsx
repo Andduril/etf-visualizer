@@ -1,66 +1,113 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '../button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '../sheet';
-import { Menu } from 'lucide-react';
+import { Command, Menu } from 'lucide-react';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../dialog';
+import { useEffect, useState } from 'react';
 
-const links = [
-  { href: '/', label: 'Accueil' },
-  { href: '/features', label: 'Fonctionnalités' },
-  { href: '/pricing', label: 'Tarifs' },
-  { href: '/contact', label: 'Contact' },
-];
+const Navbar = () => {
+  const [open, setOpen] = useState(false);
 
-const Navbar = async () => {
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'q') {
+        setOpen(true);
+      }
+    };
+
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 w-full border-b bg-background">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        {/* Logo */}
-        <Link href={'/'} className="text-lg font-semibold">
-          Etf-Visualizer
-        </Link>
+    <Dialog open={open}>
+      <header className="sticky top-0 w-full border-b bg-background">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+          {/* Logo */}
+          <Link href={'/'} className="text-lg font-semibold">
+            Etf-Visualizer
+          </Link>
 
-        {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {links.map((link, index) => {
-            return (
-              <Link
-                key={index}
-                href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* mobile navigation */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden" aria-label="Ouvrir le menu">
-              <Menu className="h-5 w-5" />
+          {/* Desktop navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              href={'/'}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Home
+            </Link>
+            <Button onClick={() => setOpen(true)} variant={'outline'}>
+              search <Command />+ Q
             </Button>
-          </SheetTrigger>
+            <Link
+              href={'/etfs'}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              All Etfs
+            </Link>
+          </nav>
 
-          <SheetContent side="right" className="w-64">
-            <SheetTitle>menu</SheetTitle>
-            <nav className="flex flex-col gap-4 mt-6">
-              {links.map((link, index) => {
-                return (
-                  <Link
-                    key={index}
-                    href={link.href}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </header>
+          {/* mobile navigation */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Ouvrir le menu">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent side="right" className="w-64">
+              <SheetTitle>menu</SheetTitle>
+              <nav className="flex flex-col gap-4 mt-6">
+                <Link
+                  href={'/'}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Home
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </header>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Share link</DialogTitle>
+          <DialogDescription>Anyone who has this link will be able to view this.</DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center gap-2">
+          <div className="grid flex-1 gap-2">AMogus</div>
+        </div>
+        <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

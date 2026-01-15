@@ -23,7 +23,10 @@ function cleanParams<T extends Record<string, unknown>>(params: T) {
 
 export async function getOneTimeSeries(options: TimeSeriesParam): Promise<TimeSeries> {
   const exist = await etfExist(options.symbol, options.exchange);
-  if (!exist) throw new Error(`Etf with symbol: ${options.symbol} do not exist`);
+  if (!exist)
+    throw new Error(
+      `Etf with symbol: ${options.symbol} and exhange: ${options.exchange} do not exist`
+    );
 
   const params = cleanParams({
     symbol: options.symbol,
@@ -38,7 +41,6 @@ export async function getOneTimeSeries(options: TimeSeriesParam): Promise<TimeSe
     params,
     schema: TimeSeriesDtoSchema,
     init: {
-      cache: 'force-cache',
       next: { revalidate: 3600 },
     },
   });
